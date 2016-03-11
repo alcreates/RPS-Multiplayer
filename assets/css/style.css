@@ -1,0 +1,62 @@
+#player1 {
+	
+	width: 100%;
+	height: 200px;
+	background-color: white;
+	border-style: solid;
+	border-color: blue;
+	border-radius: 25px;
+
+
+}
+
+#player2 {
+
+	width: 100%;
+	height: 200px;
+	background-color: white;
+	border-style: solid;
+	border-color: blue;
+	border-radius:25px;
+
+}
+
+#result {
+
+	width: 100%;
+	height:200px;
+	background-color: white;
+	border-style: solid;
+	border-color: blue;
+	border-radius:25px;
+}
+
+#player{
+	width:400px;
+}
+
+body{
+
+	background-image: url("../images/rps-logo.png");
+}
+
+#panel2 {
+	font-family: Troika;
+	margin-top: 15px;
+	font-size: 30px;
+}
+
+#panel1 {
+	font-family: Troika;
+	font-size: 40px;
+}
+
+#chat {
+	margin-top: 30px;
+	width:100%;
+	height: 350px;
+	background-color: white;
+	border-style: solid;
+	border-color: blue;
+	border-radius:25px;
+}
