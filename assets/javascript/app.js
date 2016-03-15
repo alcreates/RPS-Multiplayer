@@ -2,11 +2,13 @@
 //connected to Firebase
 var gameData = new Firebase ("https://alcreatesrps.firebaseio.com/");
 // Global variables
-player1 = ""
-player2 = ""
-turn = ""
-player1Pick = ""
-player2Pick = ""
+var player1 = ""
+var player2 = ""
+var turn = ""
+var player1Pick = ""
+var player2Pick = ""
+var result = ""
+
 // Sets player names
 var playersData = gameData.child("users");
 
@@ -40,25 +42,29 @@ $('#start').on('click', function(){
 	 
 	randomTurn();
 
-	playerSet();
-
+	playerSet()
+	
 	
 
 });
 
 function playerSet(){
 
-	playersData.push({
+	playersData.set({
 
 		player1: { 
 			name : player1,
 			pick : player1Pick,
-			turn : turn
+			turn : turn,
+			result:result
+			
 		},
 		player2: {
 			name: player2,
 			pick : player2Pick,
-			turn : turn
+			turn : turn,
+			result: result
+			
 		}
 
 
@@ -69,11 +75,18 @@ function playerSet(){
 function newGame() {
 	player1 = ""
 	player2 = ""
+	turn = ""
+    player1Pick = ""
+    player2Pick = ""
+    result = ""
 	$("#player1").text("waiting for player 1 ... zzz");
 	$("#player2").text("waiting for player 2 ... zzz");
+	playerSet();
 
 }
 function gamePlays(){
+	$("#player1").empty();
+	$("#player1").append("<div class='welcome' id='player1Name'>"+ "WELCOME  " + player1 + "</div>")
 	$("#player1").append("<div class='choice' id='one'>rock</div>");
 	$("#player1").append("<div class='choice' id='one'>paper</div>");
 	$("#player1").append("<div  class= 'choice'id ='one'>sissor</div>");
@@ -81,6 +94,8 @@ function gamePlays(){
 }
 
 function gamePlays2(){
+	$("#player2").empty();
+	$("#player2").append("<div class='welcome' id='player2Name'>"+ "WELCOME  " + player2 + "</div>")
 	$("#player2").append("<div class='choice'id='two'>rock</div>");
 	$("#player2").append("<div class='choice' id='two'>paper</div>");
 	$("#player2").append("<div class='choice' id ='two'>sissor</div>");
@@ -93,16 +108,21 @@ function playerPick(){
 	 player1Pick = $(this).text()
 	 console.log(player1Pick)
 	 turn = player2
-	 playerSet();
+	 
 	 
 	}else if(turn == player2 && $(this).attr('id') == 'two'){
 		player2Pick =$(this).text()
 		turn = player1
-		playerSet();
+		
+		
 	}
 	else{
 		alert("its not your turn")
 	}
+	
+	playerSet();
+	rpsEval();
+	
 
 }
 
@@ -116,29 +136,80 @@ function randomTurn(){
 
 } 
 
-gameData.on('child_added', function (snapshot){
+function rpsEval(){
+
+
+if (player1Pick.length > 0 && player2Pick.length > 0){
+	alert("in fucntion")
+	if(player1Pick == "rock" && player2Pick == "rock"){
+		console.log("tie")
+		result = "tied"
+
+	}
+	else if (player1Pick == "rock" && player2Pick == "sissor"){
+		result = player1 +"  wins"
+		console.log("rock wins")
+	}
+	else if (player1Pick == "rock" && player2Pick == "paper"){
+		result =  player2 +"  wins"
+		console.log(result)
+	}else if (player1Pick == "sissor" && player2Pick == "sissor"){
+		result = "tied"
+		console.log(result)
+	}else if ( player1Pick == "sissor" && player2Pick == "paper"){
+		result =  player2 + " wins"
+		console.log(result)
+	}else if ( player1Pick == "sissor" && player2Pick == "rock"){
+		result = player2 + "wins"
+		console.log(result)
+	}else if (player1Pick == "paper" && player2Pick == "paper"){
+		result = "tied"
+		console.log(result)
+	}else if (player1Pick == "paper" && player2Pick == "sissor"){
+		result = player2 + "wins"
+		console.log(result)
+	}else if (player1Pick == "paper" && player2Pick == "rock"){
+		result = player1 + "wins"
+		console.log(result)
+	}
+
+	$("#result").text(result)
+	playerSet();
+	
+}
+
+
+
+}
+
+gameData.on('value', function (snapshot){
 
 	var data = snapshot.val();
-	var updatedplayer1Pick = data.player1.pick;
-	var updatedplayer2Pick = data.player2.pick;
-	var updatedturn = data.player1.turn;
+	 player1 = data.users.player1.name;
+	 player2 = data.users.player2.name;
+	 player1Pick = data.users.player1.pick;
+	 player2Pick = data.users.player2.pick;
+	 turn = data.users.player1.turn;
+	 result = data.users.player1.result
 
 
-	player1Pick = updatedplayer1Pick;
-	player2Pick = updatedplayer2Pick;
 
+	
+	
 
+	
 });
 
 
 
 
 
-
-$(document).on('click', '.choice', playerPick);
+$(document).on('click', '.choice', playerPick );
 
 $(document).ready(function(){
 	newGame();
+	
+	
 
 });
 
