@@ -41,6 +41,9 @@ $('#start').on('click', function(){
 	}
 		
 	 
+	
+
+
 	randomTurn();
 
 	playerSet()
@@ -141,7 +144,7 @@ function rpsEval(){
 
 
 if (player1Pick.length > 0 && player2Pick.length > 0){
-	alert("in fucntion")
+	
 	if(player1Pick == "rock" && player2Pick == "rock"){
 		console.log("tie")
 		result = "tied"
@@ -196,7 +199,11 @@ gameData.on('value', function (snapshot){
 
 	$("#result").text(result)
 	
-	
+	if (result != ""){
+		newGameInterval = setInterval(function(){newGame()}, 1000);
+
+	}
+	clearInterval(newGameInterval);
 
 	
 });
@@ -250,8 +257,8 @@ chatData.limitToLast(10).on('child_added', function(snapshot){
 $(document).on('click', '.choice', playerPick );
 
 $(document).ready(function(){
-	newGame();
 	
+	newGame();
 	
 
 });
