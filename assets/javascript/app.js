@@ -11,6 +11,7 @@ var result = ""
 
 // Sets player names
 var playersData = gameData.child("users");
+var chatData = gameData.child("chat");
 
 $('#start').on('click', function(){
 	
@@ -173,7 +174,7 @@ if (player1Pick.length > 0 && player2Pick.length > 0){
 		console.log(result)
 	}
 
-	$("#result").text(result)
+	
 	playerSet();
 	
 }
@@ -193,12 +194,54 @@ gameData.on('value', function (snapshot){
 	 result = data.users.player1.result
 
 
-
+	$("#result").text(result)
 	
 	
 
 	
 });
+
+var messageField = $("#textInput");
+var nameField = $("#userNameInput");
+var messageList = $('#chat');
+
+messageField.keypress(function(e){
+	if(e.keyCode == 13) {
+
+		var username = nameField.val();
+		var message = messageField.val();
+
+		chatData.push({name: username , text: message});
+
+		messageField.val(' ');
+
+
+	}
+
+
+});
+
+chatData.limitToLast(10).on('child_added', function(snapshot){
+
+	var data = snapshot.val();
+	var username = data.name || "anonymous";
+	var message = data.text;
+
+	var messageElement = $("<li>");
+	var nameElement =$("<strong></strong>");
+	nameElement.text(username);
+	messageElement.text(message).prepend(nameElement);
+
+	messageList.append(messageElement)
+
+	messageList[0].scrollTop = messageList[0].scrollHeight;
+
+
+
+
+
+});
+
 
 
 
@@ -213,15 +256,4 @@ $(document).ready(function(){
 
 });
 
-
-
-
-// tested Firebase
-
-
-//$('#start').on("click",function(){
-
-//	gameData.set({ test: "works"});
-
-//})
 
